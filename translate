@@ -1,0 +1,26 @@
+
+#Перевод больших текстов 
+
+from translatepy.translators.google import GoogleTranslate
+
+gtranslate = GoogleTranslate(service_url="translate.google.cn")
+max_translate_len=9000#Ограничение от инструментария. Большие тексты плохо переваривает
+
+
+
+def text_translate_processor(doc_text, translate_to="Russian", translat_from="English"):
+    doc_text=doc_text.replace('-\n', '').replace('\n', ' ')
+    translated_text=''
+    while len(doc_text)>0:
+        last_point_index=max(doc_text.rfind('.', 0, max_translate_len), doc_text.rfind('?', 0, max_translate_len), doc_text.rfind('!', 0, max_translate_len), )+1
+        if last_point_index==0:
+            last_point_index=max_translate_len
+        translated_text+=gtranslate.translate(doc_text[:last_point_index], translate_to, translat_from).result
+        doc_text=doc_text[last_point_index:]
+    print(translated_text)
+    return(translated_text)
+    
+
+
+
+
